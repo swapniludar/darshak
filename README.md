@@ -1,4 +1,4 @@
-***Darshak***
+*Darshak*
 
 Darshak is an application to asses security capabilities of your current
 cellular provider. It has following features:

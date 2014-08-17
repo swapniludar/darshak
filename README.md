@@ -41,11 +41,11 @@ Disclaimer: This file does not contain your private information such as IMSI, ph
 
 ####Thanks####
 
-1. Andreas Schildbach for his essential code part.
-2. https://github.com/Chainfire/libsuperuser/
-3. http://iconmonstr.com
-4. http://android-holo-colors.com/
-5. Tobias Engel for his awesome https://github.com/2b-as/xgoldmon
+* Andreas Schildbach for his essential code part.
+* https://github.com/Chainfire/libsuperuser/
+* http://iconmonstr.com
+* http://android-holo-colors.com/
+* Tobias Engel for his awesome https://github.com/2b-as/xgoldmon
 
 ####Bugs####
 

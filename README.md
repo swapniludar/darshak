@@ -52,6 +52,7 @@ Disclaimer: This file does not contain your private information such as IMSI, ph
 ####Bugs####
 
 Please report bugs at darshak@sec.t-labs.tu-berlin.de, thank you.
+The code is released under GPL V3. Feel free to contribute/fork and any suggestions are most welcome. The code is dirty and under development.  
 
-- Swapnil Udar, Aalto University, Helsinki, Finland
-- Ravishankar Borgaonkar, SecT, TU Berlin, Germany
+- Swapnil Udar, Aalto University, Helsinki, Finland @swapnil_udar
+- Ravishankar Borgaonkar, SecT, TU Berlin, Germany @raviborgaonkar

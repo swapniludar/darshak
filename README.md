@@ -50,3 +50,6 @@ Disclaimer: This file does not contain your private information such as IMSI, ph
 ####Bugs####
 
 Please report bugs at darshak@sec.t-labs.tu-berlin.de, thank you.
+
+- Swapnil Udar, Aalto University, Helsinki, Finland
+- Ravishankar Borgaonkar, SecT, TU Berlin, Germany

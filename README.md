@@ -1,6 +1,6 @@
 **Darshak**
 
-Darshak is an application serving *two primary usage*:
+Darshak is an application serving **two primary usage**:
 1. detecting any suspicious activity of being tracked via cellular network for example Silent SMS
 2. to assess security capabilities of your current cellular provider in realtime
  
@@ -30,10 +30,10 @@ application from play store.
 
 **Data Upload**
 
-Currently app stores essential data about GSM and 3G networks in the
-database file. Soon upload functionality will be available to collect the database file. 
+Currently Darshak stores essential data about GSM and 3G networks in the local
+database file.  Soon upload functionality will be available to upload database file from the app to central repository. 
 
-To help us improve to add more features and build IMSI catcher detector profile, we request to export database files manualy from the device and mail to darshak@sec.t-labs.tu-berlin.de.
+To help us improve and add features and build IMSI catcher detector profile, we request you to export database files manualy from the device and mail to darshak@sec.t-labs.tu-berlin.de.
 Off course, we make this data avaialbe online for further research in mobile networks.
 Disclaimer: This file does not contain your private information such as IMSI, phone number, incoming/outgoing call numbers etc.
 

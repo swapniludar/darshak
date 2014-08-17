@@ -1,12 +1,10 @@
 **Darshak**
 
-Darshak is an application serving *two primary usuage*:
-
-1. Detecting any supeciaous activitiy of being tracked via cellular network for expample Silent SMS
-2. To assess security capabilities of your current cellular provider in realtime
+Darshak is an application serving *two primary usage*:
+1. detecting any suspicious activity of being tracked via cellular network for example Silent SMS
+2. to assess security capabilities of your current cellular provider in realtime
  
-It has following features:
-
+It has following key features supporting GSM and 3G cellular networks -
 * detects and alerts when you receive silent SMS
 * invokes after every incoming/outgoing telephony call and SMS event
 * displays whether authentication has been performed by the operator
@@ -17,7 +15,7 @@ A5/2, A5/3 ) and 3G networks (UEA0 or UEA1)
 
 **Device and OS version supported**
 
-Samsung Galaxy S3 (GT I9300)
+Samsung Galaxy S3 (GT I9300) 
 
 Android 4.1.2  (If you running other version, please install stock
 firmware from Samsung)
@@ -25,9 +23,9 @@ firmware from Samsung)
 
 **How to install**
 
-1. The S3 needs to be rooted to run this application. Use [Framroot](http://forum.xda-developers.com/apps/framaroot/root-framaroot-one-click-apk-to-root-t2130276)
+1. The Samsung S3 needs to be rooted to run this application. Use [Framroot](http://forum.xda-developers.com/apps/framaroot/root-framaroot-one-click-apk-to-root-t2130276)
 application from play store.
-2. Download [the apk from here] (). Soon it will be available on Play store.
+2. Download [the apk from here] (https://github.com/darshakframework/darshak/blob/master/apk/Darshak_unsigned.apk). Soon it will be available on Play store.
 3. Install [SuperSU](https://play.google.com/store/apps/details?id=eu.chainfire.supersu&hl=de) and give access permission to the Darshak Application.
 
 **Data Upload**
@@ -47,4 +45,6 @@ Disclaimer: This file does not contain your private information such as IMSI, ph
 4. http://android-holo-colors.com/
 5. Tobias Engel for his awesome https://github.com/2b-as/xgoldmon
 
+**Bugs**
 
+Plese report bugs at darshak@sec.t-labs.tu-berlin.de, thank you.

@@ -1,16 +1,16 @@
 ####Darshak####
 
-Darshak is an application serving **two primary usage**-
+Darshak is an application serving **two primary usage** -
 
 * detecting any suspicious activity of being tracked via cellular network for example Silent SMS
-* to assess security capabilities of your current cellular provider in realtime
+* to assess security capabilities of your current cellular provider **in realtime**
  
 It has following key features supporting GSM and 3G cellular networks -
 * detects and alerts when you receive silent SMS
 * invokes after every incoming/outgoing telephony call and SMS event
 * displays whether authentication has been performed by the operator
 over-the-air and used RAND number
-* displays ciphering algorithm used by your operator for GSM ( A5/1,
+* displays ciphering algorithms used by your operator for GSM ( A5/1,
 A5/2, A5/3 ) and 3G networks (UEA0 or UEA1)
 
 
@@ -24,11 +24,11 @@ firmware from [Samsung](http://www.sammobile.com/firmwares/))
 
 ####How to install####
 
-* The Samsung S3 needs to be rooted to run this application. Use [Framroot](http://forum.xda-developers.com/apps/framaroot/root-framaroot-one-click-apk-to-root-t2130276)
+* the Samsung S3 needs to be rooted to run this application. Use [Framroot](http://forum.xda-developers.com/apps/framaroot/root-framaroot-one-click-apk-to-root-t2130276)
 application from play store.
-* Download [the apk from here] (https://github.com/darshakframework/darshak/blob/master/apk/Darshak_unsigned.apk). Soon it will be available on Play store.
-* Install [SuperSU](https://play.google.com/store/apps/details?id=eu.chainfire.supersu&hl=de) and give access permission to the Darshak Application.
-* Open the application and you are ready to monitor.
+* download [the apk from here] (https://github.com/darshakframework/darshak/blob/master/apk/Darshak_unsigned.apk). Soon it will be available on Play store.
+* install [SuperSU](https://play.google.com/store/apps/details?id=eu.chainfire.supersu&hl=de) and give access permission to the Darshak Application.
+* ppen the application and you are ready to monitor.
 
 ####Data Upload####
 

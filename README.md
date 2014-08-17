@@ -13,7 +13,7 @@ over-the-air and used RAND number
 * displays ciphering algorithms used by your operator for GSM ( A5/1,
 A5/2, A5/3 ) and 3G networks (UEA0 or UEA1)
 
-For Detail information, read our recent [Blackhat USA 2014 slides](https://www.isti.tu-berlin.de/fileadmin/fg214/ravi/Darshak-bh14.pdf)
+For detail information, read our recent [Blackhat USA 2014 slides](https://www.isti.tu-berlin.de/fileadmin/fg214/ravi/Darshak-bh14.pdf)
 
 
 ####Device and OS version supported####

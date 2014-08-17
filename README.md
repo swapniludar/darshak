@@ -31,9 +31,9 @@ application from play store.
 **Data Upload**
 
 Currently app stores essential data about GSM and 3G networks in the
-database file.Soon upload functionality will be available to collect the database file. 
+database file. Soon upload functionality will be available to collect the database file. 
 
-To helo us improve to add more features and build IMSI catcher detector profile, we request to export database files manualy from the device and mail to darshak@sec.t-labs.tu-berlin.de.
+To help us improve to add more features and build IMSI catcher detector profile, we request to export database files manualy from the device and mail to darshak@sec.t-labs.tu-berlin.de.
 Off course, we make this data avaialbe online for further research in mobile networks.
 Disclaimer: This file does not contain your private information such as IMSI, phone number, incoming/outgoing call numbers etc.
 
@@ -47,4 +47,4 @@ Disclaimer: This file does not contain your private information such as IMSI, ph
 
 **Bugs**
 
-Plese report bugs at darshak@sec.t-labs.tu-berlin.de, thank you.
+Please report bugs at darshak@sec.t-labs.tu-berlin.de, thank you.

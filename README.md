@@ -1,6 +1,7 @@
 **Darshak**
 
-Darshak is an application serving **two primary usage**:
+Darshak is an application serving **two primary usage**-
+
 1. detecting any suspicious activity of being tracked via cellular network for example Silent SMS
 2. to assess security capabilities of your current cellular provider in realtime
  
@@ -18,7 +19,7 @@ A5/2, A5/3 ) and 3G networks (UEA0 or UEA1)
 Samsung Galaxy S3 (GT I9300) 
 
 Android 4.1.2  (If you running other version, please install stock
-firmware from Samsung)
+firmware from [Samsung](http://www.sammobile.com/firmwares/))
 
 
 **How to install**

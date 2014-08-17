@@ -1,7 +1,11 @@
 **Darshak**
 
-Darshak is an application to asses security capabilities of your current
-cellular provider. It has following features:
+Darshak is an application serving *two primary usuage*:
+
+1. Detecting any supeciaous activitiy of being tracked via cellular network for expample Silent SMS
+2. To assess security capabilities of your current cellular provider in realtime
+ 
+It has following features:
 
 * detects and alerts when you receive silent SMS
 * invokes after every incoming/outgoing telephony call and SMS event
@@ -21,10 +25,10 @@ firmware from Samsung)
 
 **How to install**
 
-1. The S3 needs to be rooted to run this application. Use Framroot
+1. The S3 needs to be rooted to run this application. Use [Framroot](http://forum.xda-developers.com/apps/framaroot/root-framaroot-one-click-apk-to-root-t2130276)
 application from play store.
-2. Download the apk. Soon it will be available on Play store.
-3. Install SuperSU and give permission to the app.
+2. Download [the apk from here] (). Soon it will be available on Play store.
+3. Install [SuperSU](https://play.google.com/store/apps/details?id=eu.chainfire.supersu&hl=de) and give access permission to the Darshak Application.
 
 **Data Upload**
 

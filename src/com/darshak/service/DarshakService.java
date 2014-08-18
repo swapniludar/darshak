@@ -431,7 +431,7 @@ public class DarshakService extends Service {
 	}
 	
 	private void beginProfileParamComparison(List<Packet> packets) {
-		if (packets != null && packets.size() > 0) {
+		/*if (packets != null && packets.size() > 0) {
 			List<PacketAttribute> packetAttrs = new ArrayList<PacketAttribute>();
 			for (Packet packet : packets) {
 				packetAttrs.addAll(packet.getPacketAttributes());
@@ -439,7 +439,7 @@ public class DarshakService extends Service {
 			new ProfileParamsComparisonTask(getApplicationContext())
 					.execute(packetAttrs
 							.toArray(new PacketAttribute[packetAttrs.size()]));
-		}
+		}*/
 	}
 
 	private static final String tickerText = "Silent SMS has been received.";

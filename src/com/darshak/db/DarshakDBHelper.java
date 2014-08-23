@@ -336,7 +336,9 @@ public class DarshakDBHelper extends SQLiteOpenHelper {
 
 		EventDetails eventDetails = new EventDetails(uid, event,
 				eventReportedAt, nwType, nwOperator);
-		//consumeEventDetails(eventDetails);
+
+		// Mark event consumed.
+		consumeEventDetails(eventDetails);
 		
 		result.close();
 		return eventDetails;

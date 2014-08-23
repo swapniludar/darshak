@@ -12,7 +12,6 @@ import android.util.Log;
 import com.darshak.constants.Constants;
 import com.darshak.constants.Event;
 import com.darshak.modal.Packet;
-import com.darshak.util.Utils;
 
 /**
  * 
@@ -40,13 +39,8 @@ public class PacketReader {
 					fileByteArray, searchBeginIndex, packetIdentificationDetails);
 
 			for (ByteArrayWrapper matchedBytes : matchingBytesList) {
-				String hexCode = Utils.formatHexBytes(matchedBytes
-						.getByteArray());
-				// Log.d(LOG_TAG, hexCode);
-				Packet packet = new Packet(packetIdentificationDetails.getPacketType(),
-						hexCode);
-				packet.addPacketAttributes(packetIdentificationDetails
-						.extractAttributes(matchedBytes.getByteArray()));
+				Packet packet = packetIdentificationDetails.getPacketType()
+						.format(matchedBytes.getByteArray());
 				packets.add(packet);
 			}
 		}

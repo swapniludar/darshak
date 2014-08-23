@@ -19,15 +19,14 @@ public class FilterSelectionStatus {
 	private static final PacketType[] TRACK_SILENT_SMS_AND_CELLULAR_EVENTS = new PacketType[] {
 			PacketType.GSM_INIT_SERV_REQ, PacketType.GSM_INIT_CIPHER_MODE,
 			PacketType.GSM_INIT_AUTH_REQ, PacketType._3G_INIT_SERV_REQ,
-			PacketType._3G_INIT_CIPHER_MODE, PacketType._3G_INIT_AUTH_REQ,
+			PacketType._3G_INIT_AUTH_REQ,
 			PacketType.SILENT_SMS };	
 
 	private boolean sSilentSMSCellularEvents;
 	// Remove it
-	private boolean sProfileParams = false;
-	private static final PacketType[] PROFILE_PARAM_PACKETS = new PacketType[] {
-			/*PacketType.SYS_INFO_2,*/ PacketType.SYS_INFO_3,
-			/*PacketType.SYS_INFO_6, PacketType.PAGING_REQ_5,*/ PacketType.ASGN_CMD };
+	private boolean sProfileParams = true;
+	
+	private static final PacketType[] PROFILE_PARAM_PACKETS = new PacketType[] { PacketType.SYS_INFO_3, };
  
 	public FilterSelectionStatus(boolean silentSMSCellularEvents) {
 		super();

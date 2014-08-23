@@ -63,8 +63,6 @@ public class DarshakService extends Service {
 	
 	private LogFileReader sLogFileReader = new LogFileReader();
 	
-	private EventDetails sEventDetails;
-
 	/**
 	 * Binder for darshakService.
 	 */
@@ -105,10 +103,6 @@ public class DarshakService extends Service {
 		Message msg = mServiceHandler.obtainMessage();
 		msg.arg1 = startId;
 		mServiceHandler.sendMessage(msg);
-		if (intent != null) {
-			sEventDetails = (EventDetails) intent
-					.getSerializableExtra(Constants.EVENT);
-		}
 		return START_STICKY;
 	}
 
@@ -281,11 +275,11 @@ public class DarshakService extends Service {
 			Log.e(LOG_TAG, "Log file not found.");
 			return;
 		} else {
-			//Event event = SMSAndCallEventStatus.getInstance().getEvent();
-			NetworkType nwType = sEventDetails.getNwType();
-			String nwOperator = sEventDetails.getNwOperator();
-			Event event = sEventDetails.getEvent();
-			long eventReportedAt = sEventDetails.getReportedAt();
+			EventDetails eventDetails = getEventDetails(); 
+			NetworkType nwType = eventDetails.getNwType();
+			String nwOperator = eventDetails.getNwOperator();
+			Event event = eventDetails.getEvent();
+			long eventReportedAt = eventDetails.getReportedAt();
 
 			Log.e(LOG_TAG, "Current Event " + event.name());
 
@@ -360,6 +354,17 @@ public class DarshakService extends Service {
 		}
 	}
 
+	private EventDetails getEventDetails() {
+		EventDetails eventDetails = sDBHelper.getOldestUnconsumedEvent();
+		if (eventDetails == null) {
+			Application application = ((Application) getApplication());
+			NetworkType nwType = application.getNwType();
+			String nwOperator = application.getNwOperator();
+			eventDetails = new EventDetails(Event.NONE, nwType, nwOperator);
+		}
+		return eventDetails;
+	}
+
 	private boolean insertEntriesIfNotDuplicate(List<Packet> packets,
 			NetworkType nwType, String nwOperator, Event event, long eventReportedAt) {
 		boolean atleastOneEntryIsAdded = false;
@@ -429,9 +434,9 @@ public class DarshakService extends Service {
 			}
 		}
 	}
-	
+
 	private void beginProfileParamComparison(List<Packet> packets) {
-		/*if (packets != null && packets.size() > 0) {
+		if (packets != null && packets.size() > 0) {
 			List<PacketAttribute> packetAttrs = new ArrayList<PacketAttribute>();
 			for (Packet packet : packets) {
 				packetAttrs.addAll(packet.getPacketAttributes());
@@ -439,7 +444,7 @@ public class DarshakService extends Service {
 			new ProfileParamsComparisonTask(getApplicationContext())
 					.execute(packetAttrs
 							.toArray(new PacketAttribute[packetAttrs.size()]));
-		}*/
+		}
 	}
 
 	private static final String tickerText = "Silent SMS has been received.";

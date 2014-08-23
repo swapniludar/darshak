@@ -6,16 +6,10 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.util.Log;
 
-import com.darshak.Application;
-import com.darshak.constants.Constants;
-import com.darshak.constants.Event;
-import com.darshak.constants.NetworkType;
-import com.darshak.modal.EventDetails;
-
 /**
  * 
  * @author Swapnil Udar & Ravishankar Borgaonkar
- *
+ * 
  */
 public class AlarmEventReceiver extends BroadcastReceiver {
 
@@ -29,27 +23,9 @@ public class AlarmEventReceiver extends BroadcastReceiver {
 			// Do nothing.
 			return;
 		}
-
-		Application application = ((Application) context.getApplicationContext());
-		
-		EventDetails eventDetails = application.getDBHelper().getOldestUnconsumedEvent();
-		if (eventDetails == null) {
-			NetworkType nwType = application.getNwType();
-			String nwOperator = application.getNwOperator();
-			eventDetails = new EventDetails(Event.NONE, nwType, nwOperator);
-		}
-		Log.d(LOG_TAG,
-				"Alarm Broadcast received, service is invoked for event "
-						+ eventDetails);
-
+		Log.e(LOG_TAG, "Alarm receiver invoked.");
 		Intent serviceIntent = new Intent(context, DarshakService.class);
-		serviceIntent.putExtra(Constants.EVENT, eventDetails);
 		context.startService(serviceIntent);
-
-		// Consume event if it is not NULL.
-		if (eventDetails.getEvent() != Event.NONE) {
-			application.getDBHelper().consumeEventDetails(eventDetails);
-		}
 	}
 
 	private boolean isCallActive(Context context) {

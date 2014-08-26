@@ -19,12 +19,11 @@ public class GSMInitAuthReqFormatter extends PacketFormatter {
 		String randNumHex = formatHexBytes(ranNumBytes);
 
 		PacketAttribute authPacketAttr = new PacketAttribute(
-				NW_OP_AUTHENTICATES.getTypeId(), randNumHex,
-				NW_OP_AUTHENTICATES.getInfo());
+				NW_OP_AUTHENTICATES, randNumHex, NW_OP_AUTHENTICATES.getInfo());
 
 		String randNum = RND_NUM.getInfo() + " : " + randNumHex;
-		PacketAttribute randNumAttr = new PacketAttribute(RND_NUM.getTypeId(),
-				randNumHex, randNum);
+		PacketAttribute randNumAttr = new PacketAttribute(RND_NUM, randNumHex,
+				randNum);
 
 		packet.addPacketAttribute(authPacketAttr);
 		packet.addPacketAttribute(randNumAttr);

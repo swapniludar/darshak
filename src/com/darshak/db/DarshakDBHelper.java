@@ -302,8 +302,10 @@ public class DarshakDBHelper extends SQLiteOpenHelper {
 				+ " = 0 ";
 		whereClause = whereClause.intern();
 
+		
 		SQLiteDatabase db = getReadableDatabase();
-
+		db.beginTransactionNonExclusive();
+		
 		Cursor result = db.query(DatabaseSchema.CellularEvent.TABLE_NAME,
 				DatabaseSchema.CellularEvent.COLUMNS, whereClause, null, null,
 				null, orderBy);
@@ -341,6 +343,10 @@ public class DarshakDBHelper extends SQLiteOpenHelper {
 		consumeEventDetails(eventDetails);
 		
 		result.close();
+		
+		db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
 		return eventDetails;
 	}
 
@@ -364,7 +370,7 @@ public class DarshakDBHelper extends SQLiteOpenHelper {
 				"Deleted Log entry from database : " + uid);
 	}
 
-	public void consumeEventDetails(EventDetails eventDetails) {
+	private void consumeEventDetails(EventDetails eventDetails) {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues dbValues = new ContentValues();
 		dbValues.put(DatabaseSchema.CellularEvent.EVENT_CONSUMED, 1);
@@ -527,15 +533,18 @@ public class DarshakDBHelper extends SQLiteOpenHelper {
 	}
 
 	private PacketAttribute getPacketAttribute(Cursor result) {
-		long uid = result.getLong(result
-				.getColumnIndexOrThrow(DatabaseSchema.PacketAttributeSchema.UID));
+		long uid = result
+				.getLong(result
+						.getColumnIndexOrThrow(DatabaseSchema.PacketAttributeSchema.UID));
 		long packetUid = result
 				.getLong(result
 						.getColumnIndexOrThrow(DatabaseSchema.PacketAttributeSchema.PACKET_UID));
-		int type = result.getInt(result
-				.getColumnIndexOrThrow(DatabaseSchema.PacketAttributeSchema.TYPE));
-		long time = result.getLong(result
-				.getColumnIndexOrThrow(DatabaseSchema.PacketAttributeSchema.TIME));
+		int typeId = result
+				.getInt(result
+						.getColumnIndexOrThrow(DatabaseSchema.PacketAttributeSchema.TYPE));
+		long time = result
+				.getLong(result
+						.getColumnIndexOrThrow(DatabaseSchema.PacketAttributeSchema.TIME));
 		String hexCode = result
 				.getString(result
 						.getColumnIndexOrThrow(DatabaseSchema.PacketAttributeSchema.HEX_CODE));
@@ -544,7 +553,9 @@ public class DarshakDBHelper extends SQLiteOpenHelper {
 				.getString(result
 						.getColumnIndexOrThrow(DatabaseSchema.PacketAttributeSchema.DISPLAY_TXT));
 		displayText = displayText.intern();
-		return new PacketAttribute(uid, time, packetUid, type, hexCode,
-				displayText);
+		PacketAttributeType packetAttrType = PacketAttributeType
+				.getPacketAttributeType(typeId);
+		return new PacketAttribute(uid, time, packetUid, packetAttrType,
+				hexCode, displayText);
 	}
 }

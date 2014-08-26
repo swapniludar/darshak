@@ -12,6 +12,8 @@ import com.darshak.constants.PacketType;
  */
 public class PacketIdentificationDetails {
 
+	private static final WildByteInfo[] WILD_BYTES_DEFAULT = {};
+
 	private PacketType sPacketType;
 	private byte sSearchBytes[];
 	private List<Integer> sAnythingAllowedBytes;
@@ -59,6 +61,7 @@ public class PacketIdentificationDetails {
 	}
 
 	public void addWildBytes(WildByteInfo... wildBytes) {
+		wildBytes = (wildBytes == null) ? WILD_BYTES_DEFAULT : wildBytes;
 		for (WildByteInfo wildByte : wildBytes) {
 			sWildByteInfoList.add(wildByte);
 		}

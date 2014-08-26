@@ -8,23 +8,60 @@ import static com.darshak.constants.Constants.LOG_DIR_FILE;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.darshak.constants.Constants;
+import com.darshak.constants.NetworkType;
+import com.darshak.modal.LogEntry;
 
 import eu.chainfire.libsuperuser.Shell;
 
 public class Utils {
 
+	private static final SimpleDateFormat OUTPUT_DATE_FORMAT = new SimpleDateFormat(
+			"dd-MMM-yy HH:mm", Locale.getDefault());;
+
 	private Utils() {
-		// private constructor for utility class
+		// Private constructor for utils class
 	}
 
 	private static final String LOG_TAG = Utils.class.getSimpleName();
 
 	private static final byte ZERO = (byte) 0x0F;
+
+	public static NetworkType networkToConnectionType(final int networkType) {
+		if (networkType == 0)
+			return null;
+		else if (networkType == TelephonyManager.NETWORK_TYPE_UMTS
+				|| networkType == TelephonyManager.NETWORK_TYPE_HSDPA
+				|| networkType == TelephonyManager.NETWORK_TYPE_HSPA
+				|| networkType == TelephonyManager.NETWORK_TYPE_HSPAP
+				|| networkType == TelephonyManager.NETWORK_TYPE_HSUPA)
+			return NetworkType._3G;
+		else if (networkType == TelephonyManager.NETWORK_TYPE_GPRS
+				|| networkType == TelephonyManager.NETWORK_TYPE_EDGE
+				|| networkType == TelephonyManager.NETWORK_TYPE_CDMA)
+			return NetworkType.GSM;
+		else
+			throw new IllegalStateException(Integer.toString(networkType));
+	}
+
+	public static String formatDate(LogEntry logEntry) {
+		Date inputDate = new Date(logEntry.getTime());
+		return OUTPUT_DATE_FORMAT.format(inputDate).intern();
+	}
+
+	public static String getNetworkType(LogEntry logEntry) {
+		NetworkType nwType = NetworkType.getMatchingNetworkType(logEntry
+				.getNwType());
+		return nwType.getNwTypeDesc();
+	}
 
 	public static String formatHexBytes(byte[] bytes) {
 		StringBuilder result = new StringBuilder();
@@ -139,9 +176,9 @@ public class Utils {
 
 	public static void sleep() {
 		try {
-		Thread.sleep(100);
-		} catch(InterruptedException ie) {
+			Thread.sleep(100);
+		} catch (InterruptedException ie) {
 			// ignore
-		}		
+		}
 	}
 }

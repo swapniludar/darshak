@@ -36,11 +36,11 @@ public class GSMInitServiceRequestFormatter extends PacketFormatter {
 		byte tmp = a51Bytes[0];
 		// 4 bit from left is set to zero then A5/1 algorithm supported.
 		if ((A51_MASK & tmp) == (byte) 0x00) {
-			return new PacketAttribute(A51_AVLBLE_ON_MOBILE.getTypeId(),
-					hexCode, A51_AVLBLE_ON_MOBILE.getInfo());
+			return new PacketAttribute(A51_AVLBLE_ON_MOBILE, hexCode,
+					A51_AVLBLE_ON_MOBILE.getInfo());
 		}
-		return new PacketAttribute(A51_NT_AVLBLE_ON_MOBILE.getTypeId(),
-				hexCode, A51_NT_AVLBLE_ON_MOBILE.getInfo());
+		return new PacketAttribute(A51_NT_AVLBLE_ON_MOBILE, hexCode,
+				A51_NT_AVLBLE_ON_MOBILE.getInfo());
 
 	}
 
@@ -50,10 +50,10 @@ public class GSMInitServiceRequestFormatter extends PacketFormatter {
 		byte tmp = a53Bytes[0];
 		// 2nd bit from left is set to one then A5/3 algorithm supported.
 		if ((A53_MASK & tmp) == (byte) 0x00) {
-			return new PacketAttribute(A53_NT_AVLBLE_ON_MOBILE.getTypeId(),
-					hexCode, A53_NT_AVLBLE_ON_MOBILE.getInfo());
+			return new PacketAttribute(A53_NT_AVLBLE_ON_MOBILE, hexCode,
+					A53_NT_AVLBLE_ON_MOBILE.getInfo());
 		}
-		return new PacketAttribute(A53_AVLBLE_ON_MOBILE.getTypeId(), hexCode,
+		return new PacketAttribute(A53_AVLBLE_ON_MOBILE, hexCode,
 				A53_AVLBLE_ON_MOBILE.getInfo());
 	}
 
@@ -63,10 +63,10 @@ public class GSMInitServiceRequestFormatter extends PacketFormatter {
 		byte tmp = a53Bytes[0];
 		// 1st bit from left is set to one then A5/2 algorithm supported.
 		if ((A52_MASK & tmp) == (byte) 0x00) {
-			return new PacketAttribute(A52_NT_AVLBLE_ON_MOBILE.getTypeId(),
-					hexCode, A52_NT_AVLBLE_ON_MOBILE.getInfo());
+			return new PacketAttribute(A52_NT_AVLBLE_ON_MOBILE, hexCode,
+					A52_NT_AVLBLE_ON_MOBILE.getInfo());
 		}
-		return new PacketAttribute(A52_AVLBLE_ON_MOBILE.getTypeId(), hexCode,
+		return new PacketAttribute(A52_AVLBLE_ON_MOBILE, hexCode,
 				A52_AVLBLE_ON_MOBILE.getInfo());
 	}
 
@@ -75,7 +75,7 @@ public class GSMInitServiceRequestFormatter extends PacketFormatter {
 		String hexCode = formatHexBytes(tmsiBytes);
 		String displayText = PacketAttributeType.TMSI_NUM.getInfo() + " : "
 				+ hexCode;
-		return new PacketAttribute(PacketAttributeType.TMSI_NUM.getTypeId(),
-				hexCode, displayText);
+		return new PacketAttribute(PacketAttributeType.TMSI_NUM, hexCode,
+				displayText);
 	}
 }

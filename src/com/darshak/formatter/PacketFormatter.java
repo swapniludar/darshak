@@ -3,7 +3,6 @@ package com.darshak.formatter;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -18,11 +17,11 @@ public abstract class PacketFormatter {
 
 	public PacketFormatter() {
 		sInputDateFormat = new SimpleDateFormat("yyMMddHHmmss", Locale.ROOT);
-		sInputDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		sInputDateFormat.setTimeZone(TimeZone.getDefault());
 
 		sOutputDateFormat = new SimpleDateFormat("dd-MM-yy HH:mm:ss",
 				Locale.ROOT);
-		sOutputDateFormat.setTimeZone(Calendar.getInstance().getTimeZone());
+		sOutputDateFormat.setTimeZone(TimeZone.getDefault());
 	}
 
 	public abstract Packet formatPacket(byte[] packetBytes);
@@ -36,13 +35,15 @@ public abstract class PacketFormatter {
 		return extractedCodes;
 	}
 
-	protected String formatPhoneNumber(byte[] extractedBytes) {
+	protected String formatPhoneNumber(byte[] extractedBytes, int phoneNumLen) {
 		StringBuilder phoneNumber = new StringBuilder();
 		for (int i = 0; i < extractedBytes.length; i++) {
 			phoneNumber.append(String.format("%02X ",
 					Utils.swipeNibble(extractedBytes[i])));
 		}
-		return phoneNumber.toString();
+		return "+"
+				+ phoneNumber.toString().replace(" ", "")
+						.substring(0, phoneNumLen);
 	}
 
 	protected String formatTimestamp(byte[] extractedBytes) {

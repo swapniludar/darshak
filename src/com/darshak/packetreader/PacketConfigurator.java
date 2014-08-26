@@ -1,5 +1,15 @@
 package com.darshak.packetreader;
 
+import static android.content.Context.TELEPHONY_SERVICE;
+import static com.darshak.constants.PacketType.GSM_INIT_AUTH_REQ;
+import static com.darshak.constants.PacketType.GSM_INIT_CIPHER_MODE;
+import static com.darshak.constants.PacketType.GSM_INIT_SERV_REQ;
+import static com.darshak.constants.PacketType.SILENT_SMS;
+import static com.darshak.constants.PacketType.SYS_INFO_3;
+import static com.darshak.constants.PacketType.TMSI_RELOCATION;
+import static com.darshak.constants.PacketType._3G_INIT_AUTH_REQ;
+import static com.darshak.constants.PacketType._3G_INIT_SERV_REQ;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +19,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.darshak.constants.Constants;
-import com.darshak.constants.PacketType;
 import com.darshak.util.Utils;
 
 /**
@@ -39,6 +48,7 @@ public class PacketConfigurator {
 		sGSMPacketList.add(gsmInitServiceRequestCode());
 		sGSMPacketList.add(gsmInitCipheringModeCode());
 		sGSMPacketList.add(gsmInitAuthenticationRequestCode());
+		sGSMPacketList.add(tmsiRelocationCommand());
 
 		// Silent SMS
 		sSilentSMSPacketList.add(initPing3SilentSMSCodes());
@@ -74,12 +84,9 @@ public class PacketConfigurator {
 		List<Integer> anythingAllowedBytes = Arrays.asList(6, 7, 8, 9, 10, 11,
 				12, 13, 14, 15, 16, 17, 18, 19);
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
-				PacketType._3G_INIT_SERV_REQ, initSecurityModeBytes,
-				anythingAllowedBytes, 0, 5);
+				_3G_INIT_SERV_REQ, initSecurityModeBytes, anythingAllowedBytes,
+				0, 5);
 
-		PacketIdentificationDetails.WildByteInfo[] wildBytes = new PacketIdentificationDetails.WildByteInfo[] {};
-
-		packetIdentificationDetails.addWildBytes(wildBytes);
 		return packetIdentificationDetails;
 	}
 
@@ -100,12 +107,7 @@ public class PacketConfigurator {
 				27, 28, 29, 30, 31, 32, 33, 34, 35, 36);
 
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
-				PacketType._3G_INIT_AUTH_REQ, packetBytes,
-				anythingAllowedBytes, 0, 20);
-
-		PacketIdentificationDetails.WildByteInfo[] wildBytes = new PacketIdentificationDetails.WildByteInfo[] {};
-
-		packetIdentificationDetails.addWildBytes(wildBytes);
+				_3G_INIT_AUTH_REQ, packetBytes, anythingAllowedBytes, 0, 20);
 
 		return packetIdentificationDetails;
 	}
@@ -119,12 +121,7 @@ public class PacketConfigurator {
 				15);
 
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
-				PacketType.GSM_INIT_SERV_REQ, packetBytes,
-				anythingAllowedBytes, 0, 11);
-
-		PacketIdentificationDetails.WildByteInfo[] wildBytes = {};
-
-		packetIdentificationDetails.addWildBytes(wildBytes);
+				GSM_INIT_SERV_REQ, packetBytes, anythingAllowedBytes, 0, 11);
 
 		return packetIdentificationDetails;
 	}
@@ -136,18 +133,12 @@ public class PacketConfigurator {
 		List<Integer> anythingAllowedBytes = Arrays.asList(1, 5);
 
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
-				PacketType.GSM_INIT_CIPHER_MODE, packetBytes,
-				anythingAllowedBytes, 0, 4);
-
-		PacketIdentificationDetails.WildByteInfo[] wildBytes = {};
-
-		packetIdentificationDetails.addWildBytes(wildBytes);
+				GSM_INIT_CIPHER_MODE, packetBytes, anythingAllowedBytes, 0, 4);
 
 		return packetIdentificationDetails;
 	}
 
 	private static PacketIdentificationDetails gsmInitAuthenticationRequestCode() {
-
 		byte packetBytes[] = { (byte) 0x05, (byte) 0x12, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
@@ -158,12 +149,23 @@ public class PacketConfigurator {
 				9, 10, 11, 12, 13, 14, 15, 16, 17, 18);
 
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
-				PacketType.GSM_INIT_AUTH_REQ, packetBytes,
-				anythingAllowedBytes, 0, 19);
+				GSM_INIT_AUTH_REQ, packetBytes, anythingAllowedBytes, 0, 19);
 
-		PacketIdentificationDetails.WildByteInfo[] wildBytes = {};
+		return packetIdentificationDetails;
+	}
 
-		packetIdentificationDetails.addWildBytes(wildBytes);
+	private static PacketIdentificationDetails tmsiRelocationCommand() {
+		byte packetBytes[] = { (byte) 0x03, (byte) 0x86, (byte) 0x35,
+				(byte) 0x05, (byte) 0x1a, (byte) 0x00, (byte) 0x00,
+				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x05,
+				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+				(byte) 0x00, (byte) 0x2b };
+
+		List<Integer> anythingAllowedBytes = Arrays.asList(5, 6, 7, 8, 9, 11,
+				12, 13, 14, 15);
+
+		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
+				TMSI_RELOCATION, packetBytes, anythingAllowedBytes, 0, 16);
 
 		return packetIdentificationDetails;
 	}
@@ -181,11 +183,7 @@ public class PacketConfigurator {
 				8, 9, 12, 13, 14, 15, 16, 17, 18, 27);
 
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
-				PacketType.SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 19);
-
-		PacketIdentificationDetails.WildByteInfo[] wildBytes = {};
-
-		packetIdentificationDetails.addWildBytes(wildBytes);
+				SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 19);
 
 		return packetIdentificationDetails;
 	}
@@ -202,7 +200,7 @@ public class PacketConfigurator {
 				11, 12, 13, 14, 15, 16, 17, 18, 19);
 
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
-				PacketType.SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 10);
+				SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 10);
 
 		PacketIdentificationDetails.WildByteInfo wildByteInfo = packetIdentificationDetails.new WildByteInfo(
 				1, (byte) 0x0c, (byte) 0x0d);
@@ -234,11 +232,7 @@ public class PacketConfigurator {
 				26);
 
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
-				PacketType.SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 19);
-
-		PacketIdentificationDetails.WildByteInfo[] wildBytes = {};
-
-		packetIdentificationDetails.addWildBytes(wildBytes);
+				SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 19);
 
 		return packetIdentificationDetails;
 	}
@@ -264,8 +258,7 @@ public class PacketConfigurator {
 		sysInfo3Bytes[7] = mobCountryCode[2];
 
 		PacketIdentificationDetails codeInfo = new PacketIdentificationDetails(
-				PacketType.SYS_INFO_3, sysInfo3Bytes,
-				sysInfo3AnythingAllwdByts, 0, 22);
+				SYS_INFO_3, sysInfo3Bytes, sysInfo3AnythingAllwdByts, 0, 22);
 
 		codeInfo.addWildBytes(sysInfo3WildBytes);
 
@@ -274,7 +267,7 @@ public class PacketConfigurator {
 
 	private static byte[] getMobCntryAndNetCode(Context context) {
 		TelephonyManager telManager = (TelephonyManager) context
-				.getSystemService(Context.TELEPHONY_SERVICE);
+				.getSystemService(TELEPHONY_SERVICE);
 		String mobNetNetworkCode = telManager.getNetworkOperator();
 		Log.d(LOG_TAG, "Mobile network code from telephony manager : "
 				+ mobNetNetworkCode);

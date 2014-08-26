@@ -37,10 +37,10 @@ public class GSMInitCipheringModeFormatter extends PacketFormatter {
 		// 1st bit from left is set to one then NW operator requests to start
 		// ciphering.
 		if ((ENC_MASK & tmp) == (byte) 0x00) {
-			return new PacketAttribute(NW_NT_OP_REQ_START_ENC.getTypeId(),
-					hexCode, NW_NT_OP_REQ_START_ENC.getInfo());
+			return new PacketAttribute(NW_NT_OP_REQ_START_ENC, hexCode,
+					NW_NT_OP_REQ_START_ENC.getInfo());
 		}
-		return new PacketAttribute(NW_OP_REQ_START_ENC.getTypeId(), hexCode,
+		return new PacketAttribute(NW_OP_REQ_START_ENC, hexCode,
 				NW_OP_REQ_START_ENC.getInfo());
 
 	}
@@ -51,17 +51,17 @@ public class GSMInitCipheringModeFormatter extends PacketFormatter {
 		byte tmp = encBytes[0];
 		// xxxx 000x -> A51 algorithm supported.
 		if ((ENC_ALGO_MASK & tmp) == (byte) 0x00) {
-			return new PacketAttribute(NW_OP_USING_A51.getTypeId(), hexCode,
+			return new PacketAttribute(NW_OP_USING_A51, hexCode,
 					NW_OP_USING_A51.getInfo());
 		}
 		// xxxx 001x -> A52 algorithm supported.
 		if ((ENC_ALGO_MASK & tmp) == (byte) 0x02) {
-			return new PacketAttribute(NW_OP_USING_A52.getTypeId(), hexCode,
+			return new PacketAttribute(NW_OP_USING_A52, hexCode,
 					NW_OP_USING_A52.getInfo());
 		}
 		// xxxx 010x -> A53 algorithm supported.
 		if ((ENC_ALGO_MASK & tmp) == (byte) 0x04) {
-			return new PacketAttribute(NW_OP_USING_A53.getTypeId(), hexCode,
+			return new PacketAttribute(NW_OP_USING_A53, hexCode,
 					NW_OP_USING_A53.getInfo());
 		}
 		// Ideally control should never reach here
@@ -74,10 +74,10 @@ public class GSMInitCipheringModeFormatter extends PacketFormatter {
 		byte tmp = imeiBytes[0];
 		// 1 bit from left is set to one then NW operator requests IMEI
 		if ((IMEI_MASK & tmp) == (byte) 0x00) {
-			return new PacketAttribute(NW_OP_NT_REQ_IMEI.getTypeId(), hexCode,
+			return new PacketAttribute(NW_OP_NT_REQ_IMEI, hexCode,
 					NW_OP_NT_REQ_IMEI.getInfo());
 		}
-		return new PacketAttribute(NW_OP_REQ_IMEI.getTypeId(), hexCode,
+		return new PacketAttribute(NW_OP_REQ_IMEI, hexCode,
 				NW_OP_REQ_IMEI.getInfo());
 	}
 }

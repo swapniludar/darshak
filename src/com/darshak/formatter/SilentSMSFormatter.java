@@ -24,7 +24,7 @@ public class SilentSMSFormatter extends PacketFormatter {
 			String hexCode = formatHexBytes(packetBytes);
 			packet = new Packet(SILENT_SMS, hexCode);
 			// Byte sequence from 1 to 10 = Senders Number
-			packetAttributes.add(getSenders(packetBytes, 3, 10));
+			packetAttributes.add(getSenders(packetBytes, 3, 10, packetBytes[1]));
 			// Byte sequence from 12 to 19 = Received time
 			packetAttributes.add(getReceivedTime(packetBytes, 12, 19));
 			packet.addPacketAttributes(packetAttributes);
@@ -34,7 +34,7 @@ public class SilentSMSFormatter extends PacketFormatter {
 			packet = new Packet(SILENT_SMS, hexCode);
 
 			// Byte sequence from 1 to 10 = Senders Number
-			packetAttributes.add(getSenders(packetBytes, 3, 9));
+			packetAttributes.add(getSenders(packetBytes, 3, 9, packetBytes[1]));
 			// Byte sequence from 12 to 19 = Received time
 			packetAttributes.add(getReceivedTime(packetBytes, 11, 18));
 			packet.addPacketAttributes(packetAttributes);
@@ -44,12 +44,12 @@ public class SilentSMSFormatter extends PacketFormatter {
 	}
 
 	protected PacketAttribute getSenders(byte[] packetBytes, int startByteIndx,
-			int endByteIndx) {
+			int endByteIndx, int phoneNumLength) {
 		byte[] sendersByte = extract(packetBytes, startByteIndx, endByteIndx);
 		String hexCode = formatHexBytes(sendersByte);
 		String displayText = SS_SENDER.getInfo() + " : "
-				+ formatPhoneNumber(sendersByte);
-		return new PacketAttribute(SS_SENDER.getTypeId(), hexCode, displayText);
+				+ formatPhoneNumber(sendersByte, phoneNumLength);
+		return new PacketAttribute(SS_SENDER, hexCode, displayText);
 	}
 
 	protected PacketAttribute getReceivedTime(byte[] packetBytes,
@@ -58,6 +58,6 @@ public class SilentSMSFormatter extends PacketFormatter {
 		String hexCode = formatHexBytes(sendersByte);
 		String displayText = SS_TSMP.getInfo() + " : "
 				+ formatTimestamp(sendersByte);
-		return new PacketAttribute(SS_TSMP.getTypeId(), hexCode, displayText);
+		return new PacketAttribute(SS_TSMP, hexCode, displayText);
 	}
 }

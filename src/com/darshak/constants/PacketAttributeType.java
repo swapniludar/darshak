@@ -42,7 +42,9 @@ public enum PacketAttributeType {
 	MSCR(26, "MSCR"),
 	ASSIGNED_TMSI(27, "Assigned TMSI"), 
 	CELL_OPTIONS(28, "Cell options"), 
-	CELL_SELECTION_PARAMS(29, "Cell selection parameters");
+	CELL_SELECTION_PARAMS(29, "Cell selection parameters"),
+	NW_OP_USING_UEA0(30, "Network operator uses uea0 algorithm for encryption."),
+	TMSI_ASSIGNED(31, "TMSI assigned.");
 
 	private int sTypeId;
 	private String sInfo;

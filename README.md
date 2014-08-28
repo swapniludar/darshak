@@ -28,7 +28,7 @@ firmware from [Samsung](http://www.sammobile.com/firmwares/))
 
 * the Samsung S3 needs to be rooted to run this application. Use [Framroot](http://forum.xda-developers.com/apps/framaroot/root-framaroot-one-click-apk-to-root-t2130276)
 application from play store.
-* download [the apk from here] (https://github.com/darshakframework/darshak/blob/master/apk/Darshak_unsigned.apk). Soon it will be available on Play store.
+* download [the apk from here] (https://github.com/darshakframework/darshak/blob/master/apk/Darshak.apk). Soon it will be available on Play store.
 * install [SuperSU](https://play.google.com/store/apps/details?id=eu.chainfire.supersu&hl=de) and give access permission to the Darshak Application.
 * ppen the application and you are ready to monitor.
 

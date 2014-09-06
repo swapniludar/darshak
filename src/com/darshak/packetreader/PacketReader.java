@@ -10,33 +10,44 @@ import android.content.Context;
 import android.util.Log;
 
 import com.darshak.constants.Constants;
-import com.darshak.constants.Event;
+import com.darshak.constants.PacketType;
+import com.darshak.db.DarshakDBHelper;
 import com.darshak.modal.Packet;
+import com.darshak.modal.SentinelPacket;
 
 /**
  * 
  * @author Swapnil Udar & Ravishankar Borgaonkar
- *
+ * 
  */
 public class PacketReader {
 
 	private static final String LOG_TAG = PacketReader.class.getSimpleName();
 
-	public List<Packet> generateResult(byte[] fileByteArray, int codeType,
-			Event event, Context context) {
+	private Context sContext;
+
+	private DarshakDBHelper sDBHelper;
+
+	public PacketReader(Context context, DarshakDBHelper dbHelper) {
+		this.sContext = context;
+		this.sDBHelper = dbHelper;
+	}
+
+	public List<Packet> generateResult(byte[] fileByteArray, int scanType) {
 		List<PacketIdentificationDetails> sPacketIdenList = PacketConfigurator
-				.getPacketsList(codeType, context);
+				.getPacketsList(scanType, sContext);
 		List<Packet> packets = new ArrayList<Packet>();
 
-		int searchBeginIndex = getSearchBeginIndex(fileByteArray, codeType,
-				event);
+		int searchBeginIndex = getSearchBeginIndex(fileByteArray,
+				getSentPktIdenDetails(scanType));
 
 		Log.d(LOG_TAG, "Log file should be scanned from the index "
 				+ searchBeginIndex);
 
 		for (PacketIdentificationDetails packetIdentificationDetails : sPacketIdenList) {
 			Set<ByteArrayWrapper> matchingBytesList = searchCodes(
-					fileByteArray, searchBeginIndex, packetIdentificationDetails);
+					fileByteArray, searchBeginIndex,
+					packetIdentificationDetails);
 
 			for (ByteArrayWrapper matchedBytes : matchingBytesList) {
 				Packet packet = packetIdentificationDetails.getPacketType()
@@ -44,7 +55,40 @@ public class PacketReader {
 				packets.add(packet);
 			}
 		}
+		updateSentinelPktSequence(scanType, fileByteArray);
 		return packets;
+	}
+
+	private PacketIdentificationDetails getSentPktIdenDetails(int scanType) {
+		SentinelPacket sentinelPacket = sDBHelper.getSentinelPacket(scanType);
+		if (sentinelPacket == null) {
+			if (scanType == Constants._3G)
+				return PacketConfigurator.initSecurityModeCodes();
+			if (scanType == Constants.GSM)
+				return PacketConfigurator.gsmInitServiceRequestCode();
+			return null;
+		}
+		byte[] sentinelBytes = sentinelPacket.getByteSequence();
+
+		PacketIdentificationDetails idendetails = new PacketIdentificationDetails(
+				PacketType.START_SCAN, sentinelBytes, new ArrayList<Integer>(),
+				0, sentinelBytes.length - 1);
+		return idendetails;
+	}
+
+	public void updateSentinelPktSequence(int scanType, byte[] fileByteArray) {
+		if (fileByteArray != null && fileByteArray.length != 0) {
+			int numOfBytes = fileByteArray.length;
+			byte[] sentinelBytes = Arrays.copyOfRange(fileByteArray, numOfBytes
+					- Constants.NUM_OF_TERMINATING_BYTES, numOfBytes);
+
+			if (null == sDBHelper.getSentinelPacket(scanType)) {
+				sDBHelper.insertSentinelPacket(scanType, sentinelBytes);
+			} else {
+				sDBHelper.updateSentinelPacket(new SentinelPacket(scanType,
+						sentinelBytes));
+			}
+		}
 	}
 
 	/**
@@ -53,17 +97,15 @@ public class PacketReader {
 	 * 
 	 * @return
 	 */
-	private int getSearchBeginIndex(byte[] fileByteArray, int codeType,
-			Event event) {
-		if (codeType != Constants.GSM || event == Event.NONE) {
-			// begin from first byte.
+	private int getSearchBeginIndex(byte[] fileByteArray,
+			PacketIdentificationDetails startingPkt) {
+		if (startingPkt == null) {
 			return 0;
 		}
-		PacketIdentificationDetails gsmServReqCodeInfo = PacketConfigurator
-				.gsmInitServiceRequestCode();
-		byte[] searchBytes = gsmServReqCodeInfo.getSearchBytes();
 
-		int firstFixedByteIndex = gsmServReqCodeInfo.getFrstFxdBytIndx();
+		byte[] searchBytes = startingPkt.getSearchBytes();
+
+		int firstFixedByteIndex = startingPkt.getFrstFxdBytIndx();
 		int serBytBeginIndex = searchBytes.length - firstFixedByteIndex - 1;
 		int j = fileByteArray.length - 1;
 		for (; j >= searchBytes.length; j--) {
@@ -71,7 +113,7 @@ public class PacketReader {
 				int i = serBytBeginIndex;
 				while (i >= 0 && j >= 0) {
 					if (fileByteArray[j] == searchBytes[i]
-							|| gsmServReqCodeInfo.compareWildByteInfo(i,
+							|| startingPkt.compareWildByteInfo(i,
 									fileByteArray[j])) {
 						i--;
 						j--;
@@ -89,11 +131,13 @@ public class PacketReader {
 	}
 
 	private Set<ByteArrayWrapper> searchCodes(byte[] fileByteArray,
-			int searchBeginIndex, PacketIdentificationDetails packetIdentificationDetails) {
+			int searchBeginIndex,
+			PacketIdentificationDetails packetIdentificationDetails) {
 		Set<ByteArrayWrapper> matchingCodes = new HashSet<ByteArrayWrapper>();
 		byte[] searchBytes = packetIdentificationDetails.getSearchBytes();
 
-		int firstFixedByteIndex = packetIdentificationDetails.getFrstFxdBytIndx();
+		int firstFixedByteIndex = packetIdentificationDetails
+				.getFrstFxdBytIndx();
 
 		for (int j = searchBeginIndex; j < fileByteArray.length; j++) {
 			if (fileByteArray[j] == searchBytes[firstFixedByteIndex]) {
@@ -105,8 +149,9 @@ public class PacketReader {
 				while (true) {
 					if (i < searchBytes.length && tmp < fileByteArray.length) {
 						if (fileByteArray[tmp] == searchBytes[i]
-								|| packetIdentificationDetails.compareWildByteInfo(i,
-										fileByteArray[tmp])) {
+								|| packetIdentificationDetails
+										.compareWildByteInfo(i,
+												fileByteArray[tmp])) {
 							i++;
 							tmp++;
 						} else {
@@ -126,7 +171,8 @@ public class PacketReader {
 		}
 		if (matchingCodes.size() == 0) {
 			Log.d(LOG_TAG, "Byte sequence matching packet structure "
-					+ packetIdentificationDetails.getPacketType().name() + " not found.");
+					+ packetIdentificationDetails.getPacketType().name()
+					+ " not found.");
 		}
 		return matchingCodes;
 	}

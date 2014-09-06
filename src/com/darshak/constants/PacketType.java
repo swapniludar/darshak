@@ -5,6 +5,7 @@ import com.darshak.formatter.GSMInitCipheringModeFormatter;
 import com.darshak.formatter.GSMInitServiceRequestFormatter;
 import com.darshak.formatter.GSMSysInfoTypeThreeFormatter;
 import com.darshak.formatter.GSMTMSIRelocationCommandFormatter;
+import com.darshak.formatter.NullFormatter;
 import com.darshak.formatter.PacketFormatter;
 import com.darshak.formatter.SilentSMSFormatter;
 import com.darshak.formatter.UMTSInitAuthReqFormatter;
@@ -27,7 +28,9 @@ public enum PacketType {
 	SILENT_SMS(6, "Silent SMS", new SilentSMSFormatter()),	
 	
 	SYS_INFO_3(8, "System Information Type 3", new GSMSysInfoTypeThreeFormatter()), 
-	TMSI_RELOCATION(9, "TMSI Relocation Command", new GSMTMSIRelocationCommandFormatter());
+	TMSI_RELOCATION(9, "TMSI Relocation Command", new GSMTMSIRelocationCommandFormatter()),
+	
+	START_SCAN(10, "Log scan start packet", new NullFormatter());
 
 	private String sInfo;
 	

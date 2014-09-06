@@ -33,10 +33,29 @@ public class SilentSMSFormatter extends PacketFormatter {
 					packetBytes.length - 1));
 			packet = new Packet(SILENT_SMS, hexCode);
 
-			// Byte sequence from 1 to 10 = Senders Number
+			// Byte sequence from 1 to 9 = Senders Number
 			packetAttributes.add(getSenders(packetBytes, 3, 9, packetBytes[1]));
-			// Byte sequence from 12 to 19 = Received time
+			// Byte sequence from 11 to 18 = Received time
 			packetAttributes.add(getReceivedTime(packetBytes, 11, 18));
+			packet.addPacketAttributes(packetAttributes);
+		} else if (packetBytes[1] == (byte) 0x0b) {
+			String hexCode = formatHexBytes(extract(packetBytes, 0,
+					packetBytes.length - 1));
+			packet = new Packet(SILENT_SMS, hexCode);
+
+			// Byte sequence from 1 to 9 = Senders Number
+			packetAttributes.add(getSenders(packetBytes, 3, 9, packetBytes[1]));
+			// Byte sequence from 11 to 19 = Received time
+			packetAttributes.add(getReceivedTime(packetBytes, 11, 19));
+			packet.addPacketAttributes(packetAttributes);
+		} else if (packetBytes[1] == (byte) 0x0a) {
+			String hexCode = formatHexBytes(packetBytes);
+			packet = new Packet(SILENT_SMS, hexCode);
+
+			// Byte sequence from 1 to 9 = Senders Number
+			packetAttributes.add(getSenders(packetBytes, 3, 8, packetBytes[1]));
+			// Byte sequence from 11 to 19 = Received time
+			packetAttributes.add(getReceivedTime(packetBytes, 10, 18));
 			packet.addPacketAttributes(packetAttributes);
 		}
 		return packet;

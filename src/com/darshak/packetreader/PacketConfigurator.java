@@ -54,6 +54,7 @@ public class PacketConfigurator {
 		sSilentSMSPacketList.add(initPing3SilentSMSCodes());
 		sSilentSMSPacketList.add(initPing4SilentSMSCodes());
 		sSilentSMSPacketList.add(initSilentSMSTypeZero());
+		sSilentSMSPacketList.add(initSilentSMSTypeZero_sender10());		
 	}
 
 	public static List<PacketIdentificationDetails> getPacketsList(
@@ -74,7 +75,7 @@ public class PacketConfigurator {
 		}
 	}
 
-	private static PacketIdentificationDetails initSecurityModeCodes() {
+	public static PacketIdentificationDetails initSecurityModeCodes() {
 		byte initSecurityModeBytes[] = { (byte) 0x0c, (byte) 0x20, (byte) 0xc0,
 				(byte) 0x00, (byte) 0x60, (byte) 0x00, (byte) 0x4a,
 				(byte) 0x30, (byte) 0x80, (byte) 0x48, (byte) 0x00,
@@ -171,7 +172,7 @@ public class PacketConfigurator {
 	}
 
 	private static PacketIdentificationDetails initPing3SilentSMSCodes() {
-		byte packetBytes[] = { (byte) 0x64, (byte) 0x0d, (byte) 0x91,
+		byte packetBytes[] = { (byte) 0x64, (byte) 0x00, (byte) 0x91,
 				(byte) 0x94, (byte) 0x61, (byte) 0x90, (byte) 0x90,
 				(byte) 0x85, (byte) 0x19, (byte) 0xf6, (byte) 0x00,
 				(byte) 0x04, (byte) 0x41, (byte) 0x10, (byte) 0x82,
@@ -179,12 +180,17 @@ public class PacketConfigurator {
 				(byte) 0x08, (byte) 0x06, (byte) 0x05, (byte) 0x04,
 				(byte) 0x0b, (byte) 0x84, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
 
-		List<Integer> anythingAllowedBytes = Arrays.asList(1, 2, 3, 4, 5, 6, 7,
+		List<Integer> anythingAllowedBytes = Arrays.asList(2, 3, 4, 5, 6, 7,
 				8, 9, 12, 13, 14, 15, 16, 17, 18, 27);
 
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
 				SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 19);
 
+		PacketIdentificationDetails.WildByteInfo wildByteInfo = packetIdentificationDetails.new WildByteInfo(
+				1, (byte) 0x0b, (byte) 0x0c, (byte) 0x0d);
+		PacketIdentificationDetails.WildByteInfo[] wildBytes = { wildByteInfo };
+		packetIdentificationDetails.addWildBytes(wildBytes);
+		
 		return packetIdentificationDetails;
 	}
 
@@ -203,11 +209,25 @@ public class PacketConfigurator {
 				SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 10);
 
 		PacketIdentificationDetails.WildByteInfo wildByteInfo = packetIdentificationDetails.new WildByteInfo(
-				1, (byte) 0x0c, (byte) 0x0d);
-
+				1, (byte) 0x0b, (byte) 0x0c, (byte) 0x0d);
 		PacketIdentificationDetails.WildByteInfo[] wildBytes = { wildByteInfo };
-
 		packetIdentificationDetails.addWildBytes(wildBytes);
+
+		return packetIdentificationDetails;
+	}
+	
+	private static PacketIdentificationDetails initSilentSMSTypeZero_sender10() {
+		byte packetBytes[] = { (byte) 0x24, (byte) 0x0a, (byte) 0x91,
+				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+				(byte) 0x00, (byte) 0x40, (byte) 0x00, (byte) 0x00,
+				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
+
+		List<Integer> anythingAllowedBytes = Arrays.asList(3, 4, 5, 6, 7, 10,
+				11, 12, 13, 14, 15, 16, 17, 18);
+
+		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
+				SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 9);
 
 		return packetIdentificationDetails;
 	}
@@ -227,13 +247,18 @@ public class PacketConfigurator {
 				(byte) 0xbe, (byte) 0x31, (byte) 0x32, (byte) 0x33,
 				(byte) 0x34, (byte) 0x00 };
 
-		List<Integer> anythingAllowedBytes = Arrays.asList(1, 2, 3, 4, 5, 6, 7,
+		List<Integer> anythingAllowedBytes = Arrays.asList(2, 3, 4, 5, 6, 7,
 				8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
 				26);
 
 		PacketIdentificationDetails packetIdentificationDetails = new PacketIdentificationDetails(
 				SILENT_SMS, packetBytes, anythingAllowedBytes, 0, 19);
 
+		PacketIdentificationDetails.WildByteInfo wildByteInfo = packetIdentificationDetails.new WildByteInfo(
+				1, (byte) 0x0b, (byte) 0x0c, (byte) 0x0d);
+		PacketIdentificationDetails.WildByteInfo[] wildBytes = { wildByteInfo };
+		packetIdentificationDetails.addWildBytes(wildBytes);
+		
 		return packetIdentificationDetails;
 	}
 

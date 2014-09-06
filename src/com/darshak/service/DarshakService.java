@@ -44,7 +44,7 @@ import com.darshak.util.Utils;
 /**
  * @author Andreas Schildbach
  * @author Swapnil Udar & Ravishankar Borgaonkar
- *
+ * 
  */
 public class DarshakService extends Service {
 
@@ -58,11 +58,11 @@ public class DarshakService extends Service {
 	private Messenger mServiceMessenger;
 
 	private DarshakDBHelper sDBHelper = null;
-	
-	private PacketReader sPacketReader = new PacketReader();
-	
+
+	private PacketReader sPacketReader;
+
 	private LogFileReader sLogFileReader = new LogFileReader();
-	
+
 	/**
 	 * Binder for darshakService.
 	 */
@@ -91,7 +91,9 @@ public class DarshakService extends Service {
 		sContentIntent = PendingIntent.getActivity(getApplicationContext(), 0,
 				sNotificationIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
 
-		sDBHelper = ((Application) getApplication()).getDBHelper();		
+		sDBHelper = ((Application) getApplication()).getDBHelper();
+
+		sPacketReader = new PacketReader(getApplicationContext(), sDBHelper);
 	}
 
 	/**
@@ -270,12 +272,12 @@ public class DarshakService extends Service {
 	}
 
 	private void lookForSecurityCodes() {
-		File[] matchingLogFile = Utils.searchLogFile();		
+		File[] matchingLogFile = Utils.searchLogFile();
 		if (matchingLogFile == null || matchingLogFile.length == 0) {
 			Log.e(LOG_TAG, "Log file not found.");
 			return;
 		} else {
-			EventDetails eventDetails = getEventDetails(); 
+			EventDetails eventDetails = getEventDetails();
 			NetworkType nwType = eventDetails.getNwType();
 			String nwOperator = eventDetails.getNwOperator();
 			Event event = eventDetails.getEvent();
@@ -283,73 +285,73 @@ public class DarshakService extends Service {
 
 			Log.e(LOG_TAG, "Current Event " + event.name());
 
-				for (int i = 0; i < matchingLogFile.length; i++) {
-					Log.d(LOG_TAG,
-							"Source log file : "
-									+ matchingLogFile[i].getAbsolutePath());
-					
-					long startTime = System.currentTimeMillis();
-					
-					byte[] filteredByteSeq = sLogFileReader.readFile(
-							matchingLogFile[i], event, nwType);
-					if (filteredByteSeq == null) {
-						Utils.deleteLogFile(matchingLogFile[i]);
-						continue;
-					}
-					long endTime = System.currentTimeMillis();
-					Log.e(LOG_TAG, "Time taken to read and filter log file "
-							+ (endTime - startTime) / 1000 + " Seconds.");
-					// Silent SMS does not generate an event, to know the presence
-					// of Silent SMS log file needs to be scanned.
-					startTime = System.currentTimeMillis();
-					List<Packet> silentSMSEntries = sPacketReader.generateResult(
-							filteredByteSeq, Constants.SMS, event, getApplicationContext());
-					Log.e(LOG_TAG, "Number of silent SMS entries : "
-							+ silentSMSEntries.size());
+			for (int i = 0; i < matchingLogFile.length; i++) {
+				Log.d(LOG_TAG,
+						"Source log file : "
+								+ matchingLogFile[i].getAbsolutePath());
 
-					List<Packet> profileParams = sPacketReader.generateResult(
-							filteredByteSeq, Constants.PROFILE_PARAMS, event, getApplicationContext());
-					beginProfileParamComparison(profileParams);
+				long startTime = System.currentTimeMillis();
 
-					Log.e(LOG_TAG,
-							"Number of Profile parameters found : " + profileParams.size());
-					
-					if (event != Event.NONE) {
-						if (NetworkType._3G == nwType) {
-							List<Packet> _3gEntries = sPacketReader
-									.generateResult(filteredByteSeq, Constants._3G, event, getApplicationContext());
-							insertEntriesIntoDB(_3gEntries, NetworkType._3G,
-									nwOperator, event, eventReportedAt);
-							Log.e(LOG_TAG,
-									"Number of 3G entries : " + _3gEntries.size());
-							_3gEntries = null;
-						} else if (NetworkType.GSM == nwType) {
-						List<Packet> gsmEntries = sPacketReader
-								.generateResult(filteredByteSeq, Constants.GSM,
-										event, getApplicationContext());
-							insertEntriesIntoDB(gsmEntries, NetworkType.GSM,
-									nwOperator, event, eventReportedAt);
-							Log.e(LOG_TAG,
-									"Number of GSM entries : " + gsmEntries.size());
-							gsmEntries = null;
-						}
-					}
-					if (insertEntriesIfNotDuplicate(silentSMSEntries, nwType,
-							nwOperator, Event.INCOMING_SILENT_SMS, System.currentTimeMillis())) {
-						setSilentSMSNotification();
-					}
-					insertEntriesIfNotDuplicate(profileParams, nwType, nwOperator,
-							Event.PROFILE_PARAMS, System.currentTimeMillis());
-					
+				byte[] filteredByteSeq = sLogFileReader
+						.readFile(matchingLogFile[i]);
+				if (filteredByteSeq == null) {
 					Utils.deleteLogFile(matchingLogFile[i]);
-					endTime = System.currentTimeMillis();
-					Log.e(LOG_TAG, "Time taken to extract code info "
-							+ (endTime - startTime) / 1000 + " Seconds.");
-	
-					filteredByteSeq = null;
-					silentSMSEntries = null;
-					profileParams = null;
+					continue;
 				}
+				long endTime = System.currentTimeMillis();
+				Log.e(LOG_TAG, "Time taken to read and filter log file "
+						+ (endTime - startTime) / 1000 + " Seconds.");
+				// Silent SMS does not generate an event, to know the presence
+				// of Silent SMS log file needs to be scanned.
+				startTime = System.currentTimeMillis();
+				List<Packet> silentSMSEntries = sPacketReader.generateResult(
+						filteredByteSeq, Constants.SMS);
+				Log.e(LOG_TAG, "Number of silent SMS entries : "
+						+ silentSMSEntries.size());
+
+				List<Packet> profileParams = sPacketReader.generateResult(
+						filteredByteSeq, Constants.PROFILE_PARAMS);
+				beginProfileParamComparison(profileParams);
+
+				Log.e(LOG_TAG, "Number of Profile parameters found : "
+						+ profileParams.size());
+
+				if (event != Event.NONE) {
+					if (NetworkType._3G == nwType) {
+						List<Packet> _3gEntries = sPacketReader.generateResult(
+								filteredByteSeq, Constants._3G);
+						insertEntriesIntoDB(_3gEntries, NetworkType._3G,
+								nwOperator, event, eventReportedAt);
+						Log.e(LOG_TAG,
+								"Number of 3G entries : " + _3gEntries.size());
+						_3gEntries = null;
+					} else if (NetworkType.GSM == nwType) {
+						List<Packet> gsmEntries = sPacketReader.generateResult(
+								filteredByteSeq, Constants.GSM);
+						insertEntriesIntoDB(gsmEntries, NetworkType.GSM,
+								nwOperator, event, eventReportedAt);
+						Log.e(LOG_TAG,
+								"Number of GSM entries : " + gsmEntries.size());
+						gsmEntries = null;
+					}
+				}
+				if (insertEntriesIfNotDuplicate(silentSMSEntries, nwType,
+						nwOperator, Event.INCOMING_SILENT_SMS,
+						System.currentTimeMillis())) {
+					setSilentSMSNotification();
+				}
+				insertEntriesIfNotDuplicate(profileParams, nwType, nwOperator,
+						Event.PROFILE_PARAMS, System.currentTimeMillis());
+
+				Utils.deleteLogFile(matchingLogFile[i]);
+				endTime = System.currentTimeMillis();
+				Log.e(LOG_TAG, "Time taken to extract code info "
+						+ (endTime - startTime) / 1000 + " Seconds.");
+
+				filteredByteSeq = null;
+				silentSMSEntries = null;
+				profileParams = null;
+			}
 			matchingLogFile = null;
 		}
 	}
@@ -366,34 +368,36 @@ public class DarshakService extends Service {
 	}
 
 	private boolean insertEntriesIfNotDuplicate(List<Packet> packets,
-			NetworkType nwType, String nwOperator, Event event, long eventReportedAt) {
+			NetworkType nwType, String nwOperator, Event event,
+			long eventReportedAt) {
 		boolean atleastOneEntryIsAdded = false;
 		if (packets != null && packets.size() > 0) {
-			long logEntryUid = sDBHelper.insertLogEntry(nwType,
-					nwOperator, event, eventReportedAt);
+			long logEntryUid = sDBHelper.insertLogEntry(nwType, nwOperator,
+					event, eventReportedAt);
 			for (Packet packet : packets) {
 				// Check if the log entry to be added is already present.
 				// Silent SMS has only one type of code entry, so if it is
 				// already present don't create an log entry.
 				boolean isDuplicate = sDBHelper.isPacketAlreadyInserted(
 						packet.getPacketTypeId(), packet.getHexCode());
-				if (!isDuplicate) {					
-					long packetUid = sDBHelper.insertPacket(logEntryUid, eventReportedAt,
-							packet.getPacketTypeId(), packet.getHexCode(),
-							isDuplicate);
+				if (!isDuplicate) {
+					long packetUid = sDBHelper.insertPacket(logEntryUid,
+							eventReportedAt, packet.getPacketTypeId(),
+							packet.getHexCode(), isDuplicate);
 					for (PacketAttribute packetAttribute : packet
 							.getPacketAttributes()) {
-						sDBHelper.insertPacketAttribute(packetUid, eventReportedAt,
+						sDBHelper.insertPacketAttribute(packetUid,
+								eventReportedAt,
 								packetAttribute.getPacketAttrTypeId(),
 								packetAttribute.getHexCode(),
 								packetAttribute.getDisplayText());
 						atleastOneEntryIsAdded = true;
 					}
 				} else {
-					/*Log.e(LOG_TAG,
-							"Code entry already exists in database."
-									+ codeEntry.getKind() + ", "
-									+ codeEntry.getHexCode());*/
+					/*
+					 * Log.e(LOG_TAG, "Code entry already exists in database." +
+					 * codeEntry.getKind() + ", " + codeEntry.getHexCode());
+					 */
 				}
 			}
 			// If no entry is added then delete the log entry.
@@ -404,12 +408,11 @@ public class DarshakService extends Service {
 		return atleastOneEntryIsAdded;
 	}
 
-	private void insertEntriesIntoDB(List<Packet> packets,
-			NetworkType nwType, String nwOperator, Event event,
-			long eventReportedAt) {
+	private void insertEntriesIntoDB(List<Packet> packets, NetworkType nwType,
+			String nwOperator, Event event, long eventReportedAt) {
 		if (packets != null && packets.size() > 0) {
-			long logEntryUid = sDBHelper.insertLogEntry(nwType, nwOperator, event,
-					eventReportedAt);
+			long logEntryUid = sDBHelper.insertLogEntry(nwType, nwOperator,
+					event, eventReportedAt);
 			for (Packet packet : packets) {
 				// Check if the log entry to be added is already present.
 				boolean isDuplicate = sDBHelper.isPacketAlreadyInserted(
@@ -427,7 +430,8 @@ public class DarshakService extends Service {
 				for (PacketAttribute packetAttribute : packet
 						.getPacketAttributes()) {
 					sDBHelper.insertPacketAttribute(codeEntryUid,
-							eventReportedAt, packetAttribute.getPacketAttrTypeId(),
+							eventReportedAt,
+							packetAttribute.getPacketAttrTypeId(),
 							packetAttribute.getHexCode(),
 							packetAttribute.getDisplayText());
 				}

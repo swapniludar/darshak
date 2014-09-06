@@ -25,7 +25,7 @@ public class FilterSelectionStatus {
 	private boolean sSilentSMSCellularEvents;
 	// Remove it
 	private boolean sProfileParams = true;
-	
+
 	private static final PacketType[] PROFILE_PARAM_PACKETS = new PacketType[] { PacketType.SYS_INFO_3, };
  
 	public FilterSelectionStatus(boolean silentSMSCellularEvents) {

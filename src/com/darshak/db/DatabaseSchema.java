@@ -122,4 +122,19 @@ public final class DatabaseSchema {
 				+ "PRIMARY KEY (" + TYPE + ", " + HEX_CODE + ")"
 				+ " ) ";
 	}
+	
+	public static final class SentinelPacketScehama {
+		public static final String TABLE_NAME = "SENTINEL_PACKET";
+		public static final String SCAN_TYPE = "SCAN_TYPE";
+		public static final String BYTE_SEQ = "BYTE_SEQ";
+
+		public static final String[] COLUMNS = { SCAN_TYPE, BYTE_SEQ };
+
+		public static final String CREATE_TABLE_SENTINEL_PACKET = "CREATE TABLE IF NOT EXISTS "
+				+ TABLE_NAME
+				+ " ( "
+				+ SCAN_TYPE + " INTEGER PRIMARY KEY UNIQUE, "
+				+ BYTE_SEQ + " BLOB " 
+				+ " ) ";
+	}
 }

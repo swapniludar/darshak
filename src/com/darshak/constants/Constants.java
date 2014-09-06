@@ -36,4 +36,6 @@ public interface Constants {
 	int DARSHAK_SERV_EXE_INTERVAL_SEC = 15;
 
 	long UNKNOWN_UID = -1;
+	
+	int NUM_OF_TERMINATING_BYTES = 200;
 }
